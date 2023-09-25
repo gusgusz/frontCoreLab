@@ -1,7 +1,10 @@
 import { useState } from "react";
 import styled from "styled-components";
 import image from "./assets/notas.png";
-
+import {Star} from '@styled-icons/bootstrap/Star';
+import {Pencil} from '@styled-icons/evil/Pencil';
+import {ColorFill} from '@styled-icons/boxicons-solid/ColorFill';
+import {DeleteOutline} from '@styled-icons/typicons/DeleteOutline'
 function App() {
   const [count, setCount] = useState(0);
 
@@ -20,36 +23,64 @@ function App() {
           <h1>Favoritas</h1>
           <div>
             
-            <Card>
+          <Card>
+              <div>
               <h2>Titulo</h2>
+              <StyledButton>
+             <STar></STar>
+             </StyledButton>
+              </div>
               <p>Descrição</p>
+              <Options>
+  <div>
+    <StyledButton>
+      <PencilIcon />
+    </StyledButton>
+    <StyledButton>
+      <ColorF />
+    </StyledButton>
+  </div>
+  <StyledButton>
+    <Delete />
+  </StyledButton>
+</Options>
             </Card>
-            <Card>
-              <h2>Titulo</h2>
-              <p>Descrição</p>
-            </Card>
-            <Card>
-              <h2>Titulo</h2>
-              <p>Descrição</p>
-            </Card>
-            <Card>
-              <h2>Titulo</h2>
-              <p>Descrição</p>
-            </Card>
-            <Card>
-              <h2>Titulo</h2>
-              <p>Descrição</p>
-            </Card>
-            <Card>
-              <h2>Titulo</h2>
-              <p>Descrição</p>
-            </Card>
+            
           </div>
         </Content>
       </Container>
     </>
   );
 }
+;
+
+
+const STar = styled(Star)`
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+`;
+const PencilIcon = styled(Pencil)`
+  width: 24px;
+  height: 24px;
+  margin-left: 12px;
+  
+`;
+
+const ColorF = styled(ColorFill)`
+  width: 24px;
+  height: 24px;
+  margin-left: 12px;
+
+  
+`;
+
+const Delete = styled(DeleteOutline)`
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+  
+`;
 
 const NavBar = styled.div`
   background-color: #fafafa;
@@ -139,13 +170,24 @@ const Card = styled.div`
   height: 380px;
   border-radius: 25px;
   margin: 10px;
-  padding: 8px 20px;
+  
+  
 
-  h2 {
+  > div:first-child{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+    
+    h2 {
     font-family: "Roboto", sans-serif;
     color: #464646;
     font-weight: 400;
     font-size: 16px;
+    margin-left: 12px;
+  }
+ 
   }
   p{
     font-family: Inter;
@@ -153,7 +195,30 @@ const Card = styled.div`
     font-weight: 300;
     line-height: 4px;
     color: #455464;
+    margin-left: 12px;
+    height: 260px;
   }
+ 
+`;
+
+const Options = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #fff;
+
+  `;
+
+const StyledButton = styled.button`
+background-color: transparent;
+width: 40px;
+height: 40px;
+border: none;
+cursor: pointer;
+:hover{
+  background-color: #ebdaa4;
+  border-radius: 48%;
+}
 `;
 
 export default App;
