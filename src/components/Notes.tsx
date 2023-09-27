@@ -99,6 +99,7 @@ const Contentt = styled.div`
   flex-direction: column;
   width: 100%;
   margin-top: 54px;
+  justify-content: center;
   h1 {
     color: #455464;
     margin-left: 30px;
