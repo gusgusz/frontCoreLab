@@ -18,6 +18,7 @@ const Navbar = styled.div`
   width: 100%;
   align-items: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  z-index: 1;
 
   div {
     display: flex;

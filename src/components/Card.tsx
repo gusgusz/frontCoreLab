@@ -19,7 +19,7 @@ interface CardContainerProps {
 const CardContainer = styled.div<CardContainerProps>`
   display: flex;
   flex-direction: column;
-  background-color: #fff;
+  background-color: ${({ color }) => color};
   width: 330px;
   height: 380px;
   border-radius: 25px;
@@ -28,6 +28,7 @@ const CardContainer = styled.div<CardContainerProps>`
   white-space: normal;
   flex-wrap: wrap;
   padding-right: 4px;
+  position: relative;
 
   > div:first-child {
     display: flex;
@@ -90,7 +91,6 @@ const Options = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #fff;
 `;
 
 const StyledButton = styled.button`
@@ -144,11 +144,51 @@ const DeleteIcon = styled(DeleteOutline)`
   margin-right: 12px;
 `;
 
+  const ColorOptions = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #aaaaaa;
+  position: absolute;
+  border-radius: 5px;
+  bottom: -20px;
+  left: 80px;
+  flex-wrap: wrap;
+  background-color: #fff;
+  width:  430px;
+  height: 76px;
+  z-index: 1;
+  button{
+    width: 33px;
+    height: 33px;
+    border: none;
+    cursor: pointer;
+  border-radius: 50%;
+  }
+`;
+
 export default function Card( props: any ) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(props.card.title);
   const [editedText, setEditedText] = useState(props.card.text);
   const [is_Favorite, setIs_Favorite] = useState(props.card.is_favorite);
+  const [color, setColor] = useState(props.card.color? props.card.color : '#fff');
+  const [isColor, setIsColor] = useState(false);
+  const colorOptions = [
+    '#BAE2FF',
+    '#B4FFDD',
+    '#FFEBAC',
+    '#FFCAB9',
+    '#F99494',
+    '#9DD6FF',
+    '#ECA1FF',
+    '#DAFF8B',
+    '#FFA285',
+    '#CDCDCD',
+    '#979797',
+    '#A99A7C'
+   
+  ]
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -175,6 +215,29 @@ export default function Card( props: any ) {
       });
   }
   
+    const handleColor = (col : string) => {
+    const updatedData = {
+     color: col,
+    };
+
+    axios
+      .put(`${Url}cards/${props.card.id}`, updatedData, {
+        headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+      })
+      .then((res) => {
+        console.log('Cor editada com sucesso:', res.data);
+        setIsEditing(false);
+        setColor(col);
+        props.setControl(!props.control)
+        setIsColor(false);
+      })
+      .catch((err) => {
+        console.log('Erro ao editar a cor do card:', err);
+      });
+  };
+
 
   const handleSave = () => {
     const updatedData = {
@@ -227,7 +290,7 @@ export default function Card( props: any ) {
   };
 
   return (
-    <CardContainer isEditing={isEditing} >
+    <CardContainer isEditing={isEditing} color={color}>
       <div>
         {isEditing ? (
           <input
@@ -260,7 +323,7 @@ export default function Card( props: any ) {
        <StyledButton onClick={handleEdit}>
             <PencilIcon />
           </StyledButton>
-          <StyledButton>
+          <StyledButton onClick={() => setIsColor(true)}>
             <ColorF />
           </StyledButton>
         </div>) :   (
@@ -274,7 +337,11 @@ export default function Card( props: any ) {
           <DeleteIcon />
         </StyledButton>
       </Options>
-    
+   { isColor && <ColorOptions>
+      {colorOptions.map((c, i) => (
+        <button key={i} onClick={() => handleColor(c)} style={{backgroundColor: c}}></button>
+      ))}
+    </ColorOptions>}
     </CardContainer>
   );
 }
