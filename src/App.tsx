@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Content from "./components/Notes";
+import Notes from "./components/Notes";
 import NavBar from "./components/NavBar";
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
         <NavBar/>
 
          
-        <Content/>
+        <Notes/>
       </Container>
     </>
   );

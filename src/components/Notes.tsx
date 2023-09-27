@@ -9,6 +9,9 @@ export default function Notes(props: any) {
 
   const [cards, setCards] = useState([])
   const [control, setControl] = useState(false)
+  const [nTitle, setNTitle] = useState('')
+  const [nText, setNText] = useState('')
+
 
   useEffect(() => {
     axios.get(`${Url}cards`, {
@@ -26,13 +29,51 @@ export default function Notes(props: any) {
     });
 }, [control]);
 
+
+const handleCreateCard = () => {
+  const newCard = {
+    title: nTitle,
+    text: nText,
+  };
+
+  axios
+    .post(`${Url}cards`, newCard, {
+      headers: {
+        'Authorization': `Bearer ${Token}`,
+      },
+    })
+    .then((res) => {
+      console.log('Card criado com sucesso:', res.data);
+      setControl(!control);
+      setNTitle(''); 
+      setNText(''); 
+    })
+    .catch((err) => {
+      console.log('Erro ao criar o card:', err);
+    });
+};
+
   
     
     return (
         <Contentt>
+           <Create>
+          <div>
+            <h2>Criar novo card</h2>
+          </div>
+          <div>
+            <input placeholder="Título do card"  onChange={(e) => setNTitle(e.target.value)}  value={nTitle}/>
+          </div>
+          <div>
+            <textarea placeholder="Digite o texto do card" onChange={(e) => setNText(e.target.value)}  value={nText}></textarea>
+          </div>
+          <div>
+            <button onClick={handleCreateCard}>Criar</button>
+          </div>
+
+           </Create>
         <h1>Favoritas</h1>
         <div>
-          
           {cards.map((card: any) => {
             
               return <Card key={card.id} card={card} control={control} setControl={setControl}/>
@@ -63,5 +104,42 @@ const Contentt = styled.div`
   div{
     display: flex;
     flex-wrap: wrap;
+  }
+`;
+
+const Create = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  width: 412px;
+  height: 140px;
+  border-radius: 25px;
+  margin: 10px;
+  align-self: center;
+
+  > div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc;
+
+    h2 {
+      font-family: 'Roboto', sans-serif;
+      color: #464646;
+      font-weight: 400;
+      font-size: 16px;
+      margin-left: 12px;
+    }
+
+    input {
+      width: 70%;
+      font-family: 'Roboto', sans-serif;
+      color: #464646;
+      font-weight: 400;
+      font-size: 16px;
+      margin-left: 12px;
+      border: none;
+      padding: 8px;
+    }
   }
 `;

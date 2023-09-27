@@ -24,13 +24,18 @@ const CardContainer = styled.div<CardContainerProps>`
   height: 380px;
   border-radius: 25px;
   margin: 10px;
+  word-wrap: break-word; 
+  white-space: normal;
+  flex-wrap: wrap;
+  padding-right: 4px;
 
   > div:first-child {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
     border-bottom: 1px solid #ccc;
+
+   
 
     h2 {
       font-family: 'Roboto', sans-serif;
@@ -38,7 +43,6 @@ const CardContainer = styled.div<CardContainerProps>`
       font-weight: 400;
       font-size: 16px;
       margin-left: 12px;
-      display: ${({ isEditing }) => (isEditing ? 'none' : 'block')};
     }
 
     input {
@@ -62,7 +66,11 @@ const CardContainer = styled.div<CardContainerProps>`
     color: #455464;
     margin-left: 12px;
     height: 260px;
-    display: ${({ isEditing }) => (isEditing ? 'none' : 'block')};
+    width: 320px;
+    flex-direction: column;
+    display:flex;
+    word-spacing: 2px;
+    line-height: 1.5;
   }
 
   textarea {
@@ -71,7 +79,9 @@ const CardContainer = styled.div<CardContainerProps>`
     padding: 12px;
     border: none;
     resize: none;
-    display: ${({ isEditing }) => (isEditing ? 'block' : 'none')};
+    display: ${({ isEditing }) => (isEditing ? 'block' : 'block')};
+    word-wrap: break-word; 
+  white-space: normal;
   }
 `;
 
@@ -237,14 +247,14 @@ export default function Card( props: any ) {
         )}
       </div>
       <Options>
-        <div>
-          <StyledButton onClick={handleEdit}>
+      { !isEditing &&  ( <div>
+       <StyledButton onClick={handleEdit}>
             <PencilIcon />
           </StyledButton>
           <StyledButton>
             <ColorF />
           </StyledButton>
-        </div>
+        </div>)}
         <StyledButton onClick={handleDelete}>
           <DeleteIcon />
         </StyledButton>
