@@ -5,6 +5,7 @@ import {Star} from '@styled-icons/bootstrap/Star';
 import { Pencil } from '@styled-icons/evil/Pencil';
 import { ColorFill } from '@styled-icons/boxicons-solid/ColorFill';
 import { DeleteOutline } from '@styled-icons/typicons/DeleteOutline';
+import { Save } from 'styled-icons/bootstrap';
 import axios from 'axios';
 import Url from '../constant/url';
 import Token from '../constant/token';
@@ -65,6 +66,7 @@ const CardContainer = styled.div<CardContainerProps>`
     color: #455464;
     margin-left: 12px;
     height: 260px;
+    max-height: 260px;
     width: 320px;
     flex-direction: column;
     display:flex;
@@ -111,6 +113,12 @@ const StarFillIcon = styled(StarFill)`
   
 `;
 
+const SaveIcon = styled(Save)`
+  width: 24px;
+  height: 24px;
+  margin-left: 12px;
+`;
+
 const StarIcon = styled(Star)`
   width: 20px;
   height: 20px;
@@ -146,12 +154,12 @@ export default function Card( props: any ) {
     setIsEditing(true);
   };
 
-  const handleFavorite = () => {
+  const handleFavorite = async () => {
     const updatedData = {
       is_favorite: !is_Favorite,
     };
-
-    axios
+  
+    await axios
       .put(`${Url}cards/${props.card.id}`, updatedData, {
         headers: {
           Authorization: `Bearer ${Token}`,
@@ -160,11 +168,13 @@ export default function Card( props: any ) {
       .then((res) => {
         console.log('Card editado com sucesso:', res.data);
         props.setControl(!props.control);
+        setIs_Favorite(!is_Favorite); 
       })
       .catch((err) => {
         console.log('Erro ao editar o card:', err);
       });
   }
+  
 
   const handleSave = () => {
     const updatedData = {
@@ -246,23 +256,25 @@ export default function Card( props: any ) {
         )}
       </div>
       <Options>
-      { !isEditing &&  ( <div>
+      { !isEditing ?  ( <div>
        <StyledButton onClick={handleEdit}>
             <PencilIcon />
           </StyledButton>
           <StyledButton>
             <ColorF />
           </StyledButton>
-        </div>)}
+        </div>) :   (
+          <div>
+        <StyledButton onClick={handleSave}>
+          <SaveIcon></SaveIcon>
+        </StyledButton>
+        </div>
+      )}
         <StyledButton onClick={handleDelete}>
           <DeleteIcon />
         </StyledButton>
       </Options>
-      {isEditing && (
-        <StyledButton onClick={handleSave}>
-          <span>Salvar</span>
-        </StyledButton>
-      )}
+    
     </CardContainer>
   );
 }

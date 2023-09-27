@@ -13,7 +13,7 @@ export default function Notes(props: any) {
 
 
   useEffect(() => {
-    axios.get(`${Url}cards`, {
+  axios.get(`${Url}cards`, {
         headers: {
             'Authorization': `Bearer ${Token}`
         }
@@ -29,13 +29,13 @@ export default function Notes(props: any) {
 }, [props.control]);
 
 
-const handleCreateCard = () => {
+const handleCreateCard = async() => {
   const newCard = {
     title: nTitle,
     text: nText,
   };
 
-  axios
+ await axios
     .post(`${Url}cards`, newCard, {
       headers: {
         'Authorization': `Bearer ${Token}`,
@@ -58,23 +58,32 @@ const handleCreateCard = () => {
         <Contentt>
            <Create>
           <div>
-            <h2>Criar novo card</h2>
+            <input placeholder="Título"  onChange={(e) => setNTitle(e.target.value)}  value={nTitle}/>
           </div>
           <div>
-            <input placeholder="Título do card"  onChange={(e) => setNTitle(e.target.value)}  value={nTitle}/>
-          </div>
-          <div>
-            <textarea placeholder="Digite o texto do card" onChange={(e) => setNText(e.target.value)}  value={nText}></textarea>
+            <textarea placeholder="Criar nota..." onChange={(e) => setNText(e.target.value)}  value={nText}></textarea>
           </div>
           <div>
             <button onClick={handleCreateCard}>Criar</button>
           </div>
 
            </Create>
-        <h1>Favoritas</h1>
+     <h1>Favoritas</h1>
         <div>
           {props.cards.map((card: any) => {
             
+            if(card.is_favorite === true){
+              return <Card key={card.id} card={card} control={props.control} setControl={props.setControl}/>
+            }
+          }
+          )}
+          
+        </div>
+        <h1>Outras</h1>
+        <div>
+          {props.cards.map((card: any) => {
+            
+            if(card.is_favorite === false)
               return <Card key={card.id} card={card} control={props.control} setControl={props.setControl}/>
             
           }
@@ -111,16 +120,52 @@ const Create = styled.div`
   flex-direction: column;
   background-color: #fff;
   width: 412px;
-  height: 140px;
-  border-radius: 25px;
+  height: 170px;
   margin: 10px;
   align-self: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+
+  div{  
+    word-wrap: break-word; 
+  white-space: normal;
+}
+
+  div > input{
+    width: 100%;
+    border: none;
+    font-family: 'Roboto', sans-serif;
+      color: #272525;
+      font-weight: 400;
+      font-size: 16px;
+      margin-left: 12px;
+  }
+  div > textarea{
+    width: 100%;
+    border: none;
+    resize: none;
+    width: 100%;
+    height: 80px;
+    margin-left: 12px;
+    
+  }  
+  div > button{
+    background-color: #455464;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    margin-left: 80%;
+    height: 30px;
+    width: 70px;
+    cursor: pointer;
+  }
 
   > div:first-child {
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #ccc;
+    height: 50px;
 
     h2 {
       font-family: 'Roboto', sans-serif;
@@ -130,15 +175,6 @@ const Create = styled.div`
       margin-left: 12px;
     }
 
-    input {
-      width: 70%;
-      font-family: 'Roboto', sans-serif;
-      color: #464646;
-      font-weight: 400;
-      font-size: 16px;
-      margin-left: 12px;
-      border: none;
-      padding: 8px;
-    }
+ 
   }
 `;
