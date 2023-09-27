@@ -1,128 +1,22 @@
-import styled from "styled-components";
-import { useState, useEffect } from "react";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { StarFill } from '@styled-icons/bootstrap/StarFill';
 import {Star} from '@styled-icons/bootstrap/Star';
-import {Pencil} from '@styled-icons/evil/Pencil';
-import {ColorFill} from '@styled-icons/boxicons-solid/ColorFill';
-import {DeleteOutline} from '@styled-icons/typicons/DeleteOutline';
-import axios from "axios";
-import  Url  from "../constant/url";
-import Token from "../constant/token";
+import { Pencil } from '@styled-icons/evil/Pencil';
+import { ColorFill } from '@styled-icons/boxicons-solid/ColorFill';
+import { DeleteOutline } from '@styled-icons/typicons/DeleteOutline';
+import axios from 'axios';
+import Url from '../constant/url';
+import Token from '../constant/token';
 import Swal from 'sweetalert2';
 
 
-
-export default function Card(props: any){
-
-
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(props.card.title);
-  const [editedText, setEditedText] = useState(props.card.text);
-
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
-  const handleSave = () => {
-    // Send edited data to the API
-    const updatedData = {
-      title: editedTitle,
-      text: editedText,
-    };
-
-    axios.put(`${Url}cards/${props.card.id}`, updatedData, {
-      headers: {
-        'Authorization': `Bearer ${Token}`
-      }
-    })
-      .then(res => {
-        console.log('Card editado com sucesso:', res.data);
-        setIsEditing(false);
-      })
-      .catch(err => {
-        console.log('Erro ao editar o card:', err);
-      });
-  };
-
-  const editCard = (cardId: number, updatedData: any) => {
-    axios.put(`${Url}cards/${cardId}`, updatedData, {
-      headers: {
-        'Authorization': `Bearer ${Token}`
-      }
-    })
-    .then(res => {
-      console.log('Card editado com sucesso:', res.data);
-    })
-    .catch(err => {
-      console.log('Erro ao editar o card:', err);
-    });
-  }
-  
-
-  const handleDelete = () => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-      
-      if (result.isConfirmed) {
-        axios.delete(`${Url}cards/${props.card.id}`, {
-          headers: {
-            'Authorization': `Bearer ${Token}`
-          }
-        })
-        .then(res => {
-       props.setControl(!props.control);
-          console.log('Card excluído com sucesso');
-        })
-        .catch(err => {
-          console.log('Erro ao excluir o card', err);
-        });
-        Swal.fire(
-          'Deleted!',
-          'Your file has been deleted.',
-          'success'
-        )
-      }
-    })
- 
-   
-  }
-  
-
-      
-           
-          return <Cardd >
-              <div>
-              <h2>{props.card.title}</h2>
-              <StyledButton>
-             <STar></STar>
-             </StyledButton>
-              </div>
-              <p>{props.card.text}</p>
-              <Options>
-  <div>
-    <StyledButton>
-      <PencilIcon />
-    </StyledButton>
-    <StyledButton>
-      <ColorF />
-    </StyledButton>
-  </div>
-  <StyledButton onClick={()=>handleDelete()}>
-    <Delete />
-  </StyledButton>
-</Options>
-            </Cardd>
-      
-        
-    
+interface CardContainerProps {
+  isEditing: boolean;
+  isFavorite: boolean;
 }
-const Cardd = styled.div`
+
+const CardContainer = styled.div<CardContainerProps>`
   display: flex;
   flex-direction: column;
   background-color: #fff;
@@ -130,26 +24,37 @@ const Cardd = styled.div`
   height: 380px;
   border-radius: 25px;
   margin: 10px;
-  
-  
 
-  > div:first-child{
+  > div:first-child {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
     border-bottom: 1px solid #ccc;
-    
+
     h2 {
-    font-family: "Roboto", sans-serif;
-    color: #464646;
-    font-weight: 400;
-    font-size: 16px;
-    margin-left: 12px;
+      font-family: 'Roboto', sans-serif;
+      color: #464646;
+      font-weight: 400;
+      font-size: 16px;
+      margin-left: 12px;
+      display: ${({ isEditing }) => (isEditing ? 'none' : 'block')};
+    }
+
+    input {
+      width: 70%;
+      font-family: 'Roboto', sans-serif;
+      color: #464646;
+      font-weight: 400;
+      font-size: 16px;
+      margin-left: 12px;
+      border: none;
+      padding: 8px;
+      display: ${({ isEditing }) => (isEditing ? 'block' : 'none')};
+    }
   }
- 
-  }
-  p{
+
+  p {
     font-family: Inter;
     font-size: 12px;
     font-weight: 300;
@@ -157,53 +62,198 @@ const Cardd = styled.div`
     color: #455464;
     margin-left: 12px;
     height: 260px;
+    display: ${({ isEditing }) => (isEditing ? 'none' : 'block')};
   }
- 
+
+  textarea {
+    width: 100%;
+    height: 260px;
+    padding: 12px;
+    border: none;
+    resize: none;
+    display: ${({ isEditing }) => (isEditing ? 'block' : 'none')};
+  }
 `;
+
 const Options = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #fff;
-
-  `;
-
-const StyledButton = styled.button`
-background-color: transparent;
-width: 40px;
-height: 40px;
-border: none;
-cursor: pointer;
-:hover{
-  background-color: #ebdaa4;
-  border-radius: 48%;
-}
 `;
 
+const StyledButton = styled.button`
+  background-color: transparent;
+  width: 40px;
+  height: 40px;
+  border: none;
+  cursor: pointer;
+  :hover {
+    background-color: #ebdaa4;
+    border-radius: 48%;
+  }
+`;
 
-const STar = styled(Star)`
+const StarFillIcon = styled(StarFill)`
   width: 20px;
   height: 20px;
   margin-right: 12px;
+  color: yellow;
+  
 `;
+
+const StarIcon = styled(Star)`
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  
+`;
+
 const PencilIcon = styled(Pencil)`
   width: 24px;
   height: 24px;
   margin-left: 12px;
-  
 `;
 
 const ColorF = styled(ColorFill)`
   width: 24px;
   height: 24px;
   margin-left: 12px;
-
-  
 `;
 
-const Delete = styled(DeleteOutline)`
+const DeleteIcon = styled(DeleteOutline)`
   width: 24px;
   height: 24px;
   margin-right: 12px;
-  
 `;
+
+export default function Card( props: any ) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(props.card.title);
+  const [editedText, setEditedText] = useState(props.card.text);
+  const [isFavorite, setIsFavorite] = useState(props.card.isFavorite);
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleFavorite = () => {
+    const updatedData = {
+      isFavorite: !isFavorite,
+    };
+
+    axios
+      .put(`${Url}cards/${props.card.id}`, updatedData, {
+        headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+      })
+      .then((res) => {
+        console.log('Card editado com sucesso:', res.data);
+        setIsFavorite(!isFavorite);
+        props.setControl(!props.control);
+      })
+      .catch((err) => {
+        console.log('Erro ao editar o card:', err);
+      });
+  }
+
+  const handleSave = () => {
+    const updatedData = {
+      title: editedTitle,
+      text: editedText,
+    };
+
+    axios
+      .put(`${Url}cards/${props.card.id}`, updatedData, {
+        headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+      })
+      .then((res) => {
+        console.log('Card editado com sucesso:', res.data);
+        setIsEditing(false);
+        props.setControl(!props.control)
+      })
+      .catch((err) => {
+        console.log('Erro ao editar o card:', err);
+      });
+  };
+
+  const handleDelete = () => {
+    Swal.fire({
+      title: 'Você tem certeza?',
+      text: 'Você não vai poder reverter isso!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sim, apague!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`${Url}cards/${props.card.id}`, {
+            headers: {
+              Authorization: `Bearer ${Token}`,
+            },
+          })
+          .then((res) => {
+            console.log('Card excluído com sucesso');
+          })
+          .catch((err) => {
+            console.log('Erro ao excluir o card', err);
+          });
+        Swal.fire('Apagado!', 'Sua nota foi apagada com sucesso.', 'success');
+      }
+    });
+  };
+
+  return (
+    <CardContainer isEditing={isEditing} isFavorite={isFavorite}>
+      <div>
+        {isEditing ? (
+          <input
+            type="text"
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+            placeholder="Digite o título"
+          />
+        ) : (
+          <h2>{props.card.title}</h2>
+        )}
+        <StyledButton onClick={handleFavorite}>
+         { isFavorite ? <StarFillIcon /> : <StarIcon />}
+        </StyledButton>
+      </div>
+      <div>
+        {isEditing ? (
+          <textarea
+            value={editedText}
+            onChange={(e) => setEditedText(e.target.value)}
+            placeholder="Digite o texto"
+          />
+        ) : (
+          <p>{props.card.text}</p>
+        )}
+      </div>
+      <Options>
+        <div>
+          <StyledButton onClick={handleEdit}>
+            <PencilIcon />
+          </StyledButton>
+          <StyledButton>
+            <ColorF />
+          </StyledButton>
+        </div>
+        <StyledButton onClick={handleDelete}>
+          <DeleteIcon />
+        </StyledButton>
+      </Options>
+      {isEditing && (
+        <StyledButton onClick={handleSave}>
+          <span>Salvar</span>
+        </StyledButton>
+      )}
+    </CardContainer>
+  );
+}
