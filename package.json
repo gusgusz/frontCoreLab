@@ -18,7 +18,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "styled-components": "^6.0.8",
-    "styled-icons": "^10.47.0"
+    "styled-icons": "^10.47.0",
+    "sweetalert2": "^11.7.31"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

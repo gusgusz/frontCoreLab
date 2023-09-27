@@ -7,11 +7,91 @@ import {DeleteOutline} from '@styled-icons/typicons/DeleteOutline';
 import axios from "axios";
 import  Url  from "../constant/url";
 import Token from "../constant/token";
+import Swal from 'sweetalert2';
 
 
 
 export default function Card(props: any){
 
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(props.card.title);
+  const [editedText, setEditedText] = useState(props.card.text);
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSave = () => {
+    // Send edited data to the API
+    const updatedData = {
+      title: editedTitle,
+      text: editedText,
+    };
+
+    axios.put(`${Url}cards/${props.card.id}`, updatedData, {
+      headers: {
+        'Authorization': `Bearer ${Token}`
+      }
+    })
+      .then(res => {
+        console.log('Card editado com sucesso:', res.data);
+        setIsEditing(false);
+      })
+      .catch(err => {
+        console.log('Erro ao editar o card:', err);
+      });
+  };
+
+  const editCard = (cardId: number, updatedData: any) => {
+    axios.put(`${Url}cards/${cardId}`, updatedData, {
+      headers: {
+        'Authorization': `Bearer ${Token}`
+      }
+    })
+    .then(res => {
+      console.log('Card editado com sucesso:', res.data);
+    })
+    .catch(err => {
+      console.log('Erro ao editar o card:', err);
+    });
+  }
+  
+
+  const handleDelete = () => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      
+      if (result.isConfirmed) {
+        axios.delete(`${Url}cards/${props.card.id}`, {
+          headers: {
+            'Authorization': `Bearer ${Token}`
+          }
+        })
+        .then(res => {
+       props.setControl(!props.control);
+          console.log('Card excluído com sucesso');
+        })
+        .catch(err => {
+          console.log('Erro ao excluir o card', err);
+        });
+        Swal.fire(
+          'Deleted!',
+          'Your file has been deleted.',
+          'success'
+        )
+      }
+    })
+ 
+   
+  }
   
 
       
@@ -33,7 +113,7 @@ export default function Card(props: any){
       <ColorF />
     </StyledButton>
   </div>
-  <StyledButton>
+  <StyledButton onClick={()=>handleDelete()}>
     <Delete />
   </StyledButton>
 </Options>

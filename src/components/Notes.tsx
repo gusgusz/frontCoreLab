@@ -8,6 +8,7 @@ import Token from "../constant/token";
 export default function Notes(props: any) {
 
   const [cards, setCards] = useState([])
+  const [control, setControl] = useState(false)
 
   useEffect(() => {
     axios.get(`${Url}cards`, {
@@ -19,8 +20,11 @@ export default function Notes(props: any) {
       setCards(res.data);
     console.log(res.data, "resposta");
   })
-    .catch(err => console.log(err, "erro"));
-}, []);
+    .catch(err => {
+      console.log(err, "erro");
+      setControl(!control);
+    });
+}, [control]);
 
   
     
@@ -31,7 +35,7 @@ export default function Notes(props: any) {
           
           {cards.map((card: any) => {
             
-              return <Card key={card.id} card={card} />
+              return <Card key={card.id} card={card} control={control} setControl={setControl}/>
             
           }
           )}
