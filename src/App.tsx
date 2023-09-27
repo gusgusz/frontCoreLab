@@ -5,17 +5,16 @@ import NavBar from "./components/NavBar";
 
 function App() {
 
-  const [count, setCount] = useState(0);
-
-  
+  const [cards, setCards] = useState([])
+  const [control, setControl] = useState(false)
 
   return (
     <>
-      <Container>
-        <NavBar/>
+      <Container >
+        <NavBar setCards={setCards} cards={cards} control={control} setControl={setControl}/>
 
          
-        <Notes/>
+        <Notes setCards={setCards} cards={cards} control={control} setControl={setControl}/>
       </Container>
     </>
   );

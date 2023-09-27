@@ -7,8 +7,7 @@ import Token from "../constant/token";
 
 export default function Notes(props: any) {
 
-  const [cards, setCards] = useState([])
-  const [control, setControl] = useState(false)
+
   const [nTitle, setNTitle] = useState('')
   const [nText, setNText] = useState('')
 
@@ -20,14 +19,14 @@ export default function Notes(props: any) {
         }
     })
     .then(res => {
-      setCards(res.data);
+      props.setCards(res.data);
     console.log(res.data, "resposta");
   })
     .catch(err => {
       console.log(err, "erro");
-      setControl(!control);
+      props.setControl(!props.control);
     });
-}, [control]);
+}, [props.control]);
 
 
 const handleCreateCard = () => {
@@ -44,7 +43,7 @@ const handleCreateCard = () => {
     })
     .then((res) => {
       console.log('Card criado com sucesso:', res.data);
-      setControl(!control);
+      props.setControl(!props.control);
       setNTitle(''); 
       setNText(''); 
     })
@@ -74,9 +73,9 @@ const handleCreateCard = () => {
            </Create>
         <h1>Favoritas</h1>
         <div>
-          {cards.map((card: any) => {
+          {props.cards.map((card: any) => {
             
-              return <Card key={card.id} card={card} control={control} setControl={setControl}/>
+              return <Card key={card.id} card={card} control={props.control} setControl={props.setControl}/>
             
           }
           )}

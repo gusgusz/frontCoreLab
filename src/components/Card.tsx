@@ -13,7 +13,6 @@ import Swal from 'sweetalert2';
 
 interface CardContainerProps {
   isEditing: boolean;
-  isFavorite: boolean;
 }
 
 const CardContainer = styled.div<CardContainerProps>`
@@ -79,7 +78,7 @@ const CardContainer = styled.div<CardContainerProps>`
     padding: 12px;
     border: none;
     resize: none;
-    display: ${({ isEditing }) => (isEditing ? 'block' : 'block')};
+    display: block;
     word-wrap: break-word; 
   white-space: normal;
   }
@@ -141,7 +140,7 @@ export default function Card( props: any ) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(props.card.title);
   const [editedText, setEditedText] = useState(props.card.text);
-  const [isFavorite, setIsFavorite] = useState(props.card.isFavorite);
+  const [is_Favorite, setIs_Favorite] = useState(props.card.is_favorite);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -149,7 +148,7 @@ export default function Card( props: any ) {
 
   const handleFavorite = () => {
     const updatedData = {
-      isFavorite: !isFavorite,
+      is_favorite: !is_Favorite,
     };
 
     axios
@@ -160,7 +159,6 @@ export default function Card( props: any ) {
       })
       .then((res) => {
         console.log('Card editado com sucesso:', res.data);
-        setIsFavorite(!isFavorite);
         props.setControl(!props.control);
       })
       .catch((err) => {
@@ -219,7 +217,7 @@ export default function Card( props: any ) {
   };
 
   return (
-    <CardContainer isEditing={isEditing} isFavorite={isFavorite}>
+    <CardContainer isEditing={isEditing} >
       <div>
         {isEditing ? (
           <input
@@ -232,7 +230,8 @@ export default function Card( props: any ) {
           <h2>{props.card.title}</h2>
         )}
         <StyledButton onClick={handleFavorite}>
-         { isFavorite ? <StarFillIcon /> : <StarIcon />}
+         { is_Favorite && <StarFillIcon /> }
+          { !is_Favorite && <StarIcon />}
         </StyledButton>
       </div>
       <div>
