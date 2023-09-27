@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import styled from 'styled-components';
 import { StarFill } from '@styled-icons/bootstrap/StarFill';
 import {Star} from '@styled-icons/bootstrap/Star';
@@ -278,7 +278,7 @@ export default function Card( props: any ) {
               Authorization: `Bearer ${Token}`,
             },
           })
-          .then((res) => {
+          .then(() => {
             console.log('Card excluído com sucesso');
           })
           .catch((err) => {
