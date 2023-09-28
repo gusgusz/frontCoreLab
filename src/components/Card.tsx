@@ -280,6 +280,7 @@ export default function Card( props: any ) {
           })
           .then(() => {
             console.log('Card excluído com sucesso');
+            props.setControl(!props.control);
           })
           .catch((err) => {
             console.log('Erro ao excluir o card', err);
